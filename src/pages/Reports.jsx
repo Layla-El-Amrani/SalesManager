@@ -53,52 +53,92 @@ const Reports = () => {
 
   const downloadReport = (report) => {
     if (report.format === 'pdf') {
-      // Création d'un nouveau document PDF
-      const doc = new jsPDF();
-      const title = `Rapport ${report.type.charAt(0).toUpperCase() + report.type.slice(1)}`;
-      const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-      
-      // En-tête du document
-      doc.setFontSize(18);
-      doc.text(title, 14, 22);
-      doc.setFontSize(11);
-      doc.setTextColor(100);
-      
-      // Sous-titre avec la période
-      doc.text(
-        `Période: du ${new Date(report.startDate).toLocaleDateString('fr-FR', dateOptions)} au ${new Date(report.endDate).toLocaleDateString('fr-FR', dateOptions)}`, 
-        14, 
-        30
-      );
-      
-      // Informations de génération
-      doc.text(
-        `Généré le: ${new Date(report.generatedAt).toLocaleString('fr-FR', { ...dateOptions, hour: '2-digit', minute: '2-digit' })}`, 
-        14, 
-        38
-      );
-      
-      // Ajout d'un tableau avec les données
-      doc.autoTable({
-        startY: 50,
-        head: [['Type', 'Valeurs']],
-        body: [
-          ['Type de rapport', report.type],
-          ['Période', `${report.startDate} au ${report.endDate}`],
-          ['Date de génération', new Date(report.generatedAt).toLocaleString('fr-FR')],
-        ],
-        theme: 'grid',
-        headStyles: { 
-          fillColor: [41, 128, 185],
-          textColor: 255,
-          fontStyle: 'bold'
-        },
-        alternateRowStyles: { fillColor: [245, 245, 245] },
-        margin: { top: 10 }
-      });
-      
-      // Sauvegarde du PDF
-      doc.save(`rapport-${report.type}-${report.startDate}-${report.endDate}.pdf`);
+      try {
+        // Création d'un nouveau document PDF
+        const doc = new jsPDF();
+        
+        // Données de démonstration
+        const reportData = {
+          ventes: {
+            title: 'Rapport des Ventes',
+            total: '24,500 MAD',
+            details: [
+              'Électronique: 8,500 MAD (35%)',
+              'Vêtements: 6,200 MAD (25%)',
+              'Alimentation: 5,100 MAD (21%)',
+              'Autres: 4,700 MAD (19%)'
+            ]
+          },
+          clients: {
+            title: 'Rapport Clients',
+            total: '1,245 clients',
+            details: [
+              'Nouveaux clients: 156',
+              'Clients fidèles: 854',
+              'Clients inactifs: 235'
+            ]
+          },
+          produits: {
+            title: 'Rapport des Produits',
+            total: '342 produits',
+            details: [
+              'Produit A: 1,250 ventes (12,500 MAD)',
+              'Produit B: 980 ventes (8,820 MAD)',
+              'Produit C: 750 ventes (6,750 MAD)',
+              'Produit D: 520 ventes (4,160 MAD)'
+            ]
+          }
+        }[report.type] || {
+          title: `Rapport ${report.type}`,
+          total: 'N/A',
+          details: ['Aucune donnée disponible']
+        };
+        
+        // Position Y initiale
+        let y = 20;
+        
+        // Titre
+        doc.setFontSize(18);
+        doc.text(reportData.title, 105, y, { align: 'center' });
+        y += 15;
+        
+        // Période
+        doc.setFontSize(12);
+        doc.text(`Période: ${report.startDate} au ${report.endDate}`, 20, y);
+        y += 10;
+        
+        // Total
+        doc.text(`Total: ${reportData.total}`, 20, y);
+        y += 15;
+        
+        // Ligne de séparation
+        doc.setDrawColor(200);
+        doc.line(20, y, 190, y);
+        y += 10;
+        
+        // Détails
+        doc.setFontSize(12);
+        doc.text('Détails:', 20, y);
+        y += 10;
+        
+        // Liste des détails
+        doc.setFontSize(10);
+        reportData.details.forEach((item, index) => {
+          if (y > 270) {
+            doc.addPage();
+            y = 20;
+          }
+          doc.text(`• ${item}`, 25, y);
+          y += 7;
+        });
+        
+        // Enregistrement du PDF
+        doc.save(`rapport-${report.type}-${new Date().getTime()}.pdf`);
+        
+      } catch (error) {
+        console.error('Erreur lors de la génération du PDF:', error);
+        alert('Une erreur est survenue lors de la génération du PDF');
+      }
       
     } else if (report.format === 'excel' || report.format === 'csv') {
       // Pour Excel/CSV, on crée un fichier texte simple
