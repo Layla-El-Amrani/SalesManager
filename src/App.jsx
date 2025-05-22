@@ -8,7 +8,6 @@ import Sidebar from './components/Sidebar';
 import SalesDashboard from './components/SalesDashboard';
 import SettingsPanel from './components/Settings';
 import Products from './pages/Products';
-import Clients from './pages/Clients';
 
 const App = () => {
   const activeTab = useSelector(state => state.sales.activeTab);
@@ -44,7 +43,7 @@ const App = () => {
           <main className="p-6">
             {activeTab === 'dashboard' && <SalesDashboard />}
             {activeTab === 'products' && <Products />}
-            {activeTab === 'customers' && <Clients />}
+            {activeTab === 'customers' && <div className="p-6">Section Clients - À implémenter</div>}
             {activeTab === 'settings' && <SettingsPanel />}
           </main>
         </div>
