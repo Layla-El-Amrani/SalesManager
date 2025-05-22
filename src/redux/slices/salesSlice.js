@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 // Define the initial state of the sales slice
 const initialState = {
+  activeTab: 'dashboard',
   data: [
     {
       "reference": "P001",

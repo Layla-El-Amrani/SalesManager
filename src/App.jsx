@@ -8,6 +8,8 @@ import Sidebar from './components/Sidebar';
 import SalesDashboard from './components/SalesDashboard';
 import SettingsPanel from './components/Settings';
 import Products from './pages/Products';
+import Clients from './pages/Clients';
+import Reports from './pages/Reports';
 
 const App = () => {
   const activeTab = useSelector(state => state.sales.activeTab);
@@ -15,15 +17,23 @@ const App = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   // Set initial active tab
+  console.log('Valeur initiale de activeTab:', activeTab);
+  
   useEffect(() => {
+    console.log('useEffect - activeTab:', activeTab);
     if (!activeTab) {
+      console.log('Définition de activeTab à dashboard');
       dispatch(setActiveTab('dashboard'));
     }
   }, [dispatch, activeTab]);
+  
+  console.log('Rendu - activeTab:', activeTab);
 
   const handleTabChange = (tab) => {
     dispatch(setActiveTab(tab));
   };
+
+  console.log('activeTab:', activeTab);
 
   return (
     <Provider store={store}>
@@ -43,7 +53,8 @@ const App = () => {
           <main className="p-6">
             {activeTab === 'dashboard' && <SalesDashboard />}
             {activeTab === 'products' && <Products />}
-            {activeTab === 'customers' && <div className="p-6">Section Clients - À implémenter</div>}
+            {activeTab === 'customers' && <Clients />}
+            {activeTab === 'reports' && <Reports />}
             {activeTab === 'settings' && <SettingsPanel />}
           </main>
         </div>

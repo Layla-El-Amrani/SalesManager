@@ -4,7 +4,9 @@ import {
   Package2, 
   User, 
   Settings,
-  LogOut
+  LogOut,
+  BarChart3,
+  FileText
 } from 'lucide-react';
 
 const Sidebar = ({ activeTab, setActiveTab, isCollapsed, setIsCollapsed }) => {
@@ -13,10 +15,12 @@ const Sidebar = ({ activeTab, setActiveTab, isCollapsed, setIsCollapsed }) => {
     { icon: Home, label: 'Tableau de bord', path: 'dashboard' },
     { icon: Package2, label: 'Produits', path: 'products' },
     { icon: User, label: 'Clients', path: 'customers' },
+    { icon: BarChart3, label: 'Rapports', path: 'reports' },
     { icon: Settings, label: 'Paramètres', path: 'settings' }
   ];
 
   const handleNavigation = (path) => {
+    console.log('Navigation vers:', path);
     setActiveTab(path);
   };
 
